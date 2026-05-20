@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --bg:        #F2F2F7;
+  --bg2:       #FFFFFF;
+  --bg3:       #E5E5EA;
+  --surface:   #FFFFFF;
+  --surface2:  #F2F2F7;
+
+  --border:    rgba(0,0,0,0.08);
+  --border2:   rgba(0,0,0,0.14);
+
+  --iba-purple: #5B3FA0;
+  --iba-purp2:  #7B5FC0;
+  --iba-purp-bg:#EDE8F8;
+  --iba-green:  #7CB518;
+  --iba-green-bg:#EEF5D8;
+  --iba-blue:   #0E86D4;
+  --iba-blue-bg:#DFF0FA;
+
+  --text:      #1C1C1E;
+  --text2:     #636366;
+  --text3:     #AEAEB2;
+
+  --red:       #FF3B30;
+  --red-bg:    #FFEBE9;
+  --amber:     #FF9500;
+  --amber-bg:  #FFF3E0;
+  --green:     #34C759;
+  --green-bg:  #E8F8ED;
+
+  --radius:    14px;
+  --radius-lg: 20px;
+  --shadow:    0 1px 4px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+:focus-visible { outline: 2px solid var(--iba-purple); outline-offset: 2px; }
+::selection { background: var(--iba-purp-bg); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.5; transform:scale(0.8); }
+}
+@keyframes ticker {
+  0%   { transform:translateY(0); }
+  100% { transform:translateY(-50%); }
+}
+
+.anim { animation: fadeUp 0.35s cubic-bezier(0.34,1.2,0.64,1) both; }
+.anim-1 { animation-delay:0.05s; }
+.anim-2 { animation-delay:0.10s; }
+.anim-3 { animation-delay:0.15s; }
+.anim-4 { animation-delay:0.20s; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.live-dot {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  background:var(--green); animation:pulse 1.4s ease-in-out infinite;
+}
+
+select, input[type="text"], input[type="email"], input[type="password"], input[type="search"] {
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+}
+select:focus, input:focus {
+  border-color: var(--iba-purple);
+  box-shadow: 0 0 0 3px var(--iba-purp-bg);
+}
+select option { background: white; color: var(--text); }
