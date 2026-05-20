@@ -1,13 +1,44 @@
 "use client";
 // ─── modules/sd/components/IBSASView.tsx ──────────────────────────────────
 // IB Grubu şirketlerarası açık satınalma siparişleri.
-// Buyer seçilir → SAS listesi gelir (FastAPI veya mock).
+// Buyer seçilir → /api/sas/open endpoint'i çağrılır (Next.js API route).
+// DB bilgisi yoksa mock veri döner, kullanıcı fark etmez.
 
 import { useState, useEffect, useCallback } from "react";
 import { Card, Button, Badge, LoadingSpinner, EmptyState, ErrorCard } from "@/components/ui";
-import { fetchOpenSAS, fetchVendors, COMPANIES, type Company, type SASLine, type Vendor } from "@/lib/api/sas";
 import { cn } from "@/components/ui/utils";
 import * as XLSX from "xlsx";
+
+const COMPANIES = ["IB10", "IB20", "IB70", "IB80"] as const;
+type Company = (typeof COMPANIES)[number];
+
+interface SASLine {
+  sas_no: string; kalem_no: string; malzeme: string; malzeme_tanimi: string;
+  acik_miktar: number; durum: string; teyitli_acik_miktar: number;
+  teslim_tarihi: string | null; planlanan_miktar: number;
+  gonderilen_miktar: number; buyer: string; vendor: string;
+}
+interface Vendor { code: string; name: string; }
+interface SASResponse {
+  items: SASLine[]; total: number; teyitli: number;
+  kismi_teyit: number; teyitsiz: number; generated_at: string; source?: string;
+}
+
+async function fetchOpenSAS(buyer: Company, vendor: string, status: string): Promise<SASResponse> {
+  const params = new URLSearchParams({ buyer });
+  if (vendor) params.set("vendor", vendor);
+  if (status) params.set("status", status);
+  const res = await fetch(`/api/sas/open?${params}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+async function fetchVendors(buyer: Company): Promise<Vendor[]> {
+  const res = await fetch(`/api/sas/vendors?buyer=${buyer}`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.vendors ?? [];
+}
 
 const STATUS_CFG: Record<string, { label: string; bg: string; color: string }> = {
   "TEYİTLİ":    { label: "Teyitli",     bg: "#EAF3DE", color: "#3B6D11" },
